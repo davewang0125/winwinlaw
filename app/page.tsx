@@ -11,6 +11,7 @@ export default function Home() {
           <nav className="hidden md:flex space-x-8">
             <a href="#how-it-works" className="text-gray-700 hover:text-primary-700">How It Works</a>
             <a href="#pricing" className="text-gray-700 hover:text-primary-700">Pricing</a>
+            <Link href="/global-landing" className="text-gray-700 hover:text-primary-700">Global Network</Link>
             <a href="#demo" className="text-gray-700 hover:text-primary-700">Demo</a>
           </nav>
           <Link href="/demo" className="bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-800 transition">
