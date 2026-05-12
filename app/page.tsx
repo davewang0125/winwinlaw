@@ -1,5 +1,5 @@
-import { Check, X, ArrowRight, Clock, Target, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
+import { Check, X, ArrowRight, Clock, Target, TrendingUp } from './components/Icons';
 
 export default function Home() {
   return (
