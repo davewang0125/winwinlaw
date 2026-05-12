@@ -1,9 +1,8 @@
 {
-  "redirects": [
+  "rewrites": [
     {
       "source": "/",
-      "destination": "/winwinlanding/index.html",
-      "permanent": false
+      "destination": "/winwinlanding/index.html"
     }
   ],
   "headers": [
