@@ -1,0 +1,4 @@
+# Only exclude these specific folders
+barapi
+profiles
+winwinlanding/components
