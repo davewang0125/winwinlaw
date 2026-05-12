@@ -1,0 +1,186 @@
+╔═══════════════════════════════════════════════════════════════╗
+║  LEGAL PROFESSIONAL PROFILES SCRAPER - QUICK START            ║
+║  ⚠️  READ LEGAL_NOTICE.md BEFORE USE  ⚠️                      ║
+╚═══════════════════════════════════════════════════════════════╝
+
+📁 STRUCTURE
+------------
+profiles/
+├── scrapers/          # Web scrapers
+│   ├── base.ts       # Base class (extend this)
+│   └── example.ts    # Template scraper
+├── database/          # Database layer
+│   ├── schema.sql    # PostgreSQL schema
+│   ├── client.ts     # DB connection
+│   └── operations.ts # CRUD operations
+├── cron/              # Scheduled jobs
+│   └── daily-sync.ts # Daily scraper
+├── utils/             # Utilities
+│   ├── robots.ts     # robots.txt checker
+│   ├── rate-limit.ts # Rate limiting
+│   └── logger.ts     # Logging
+└── logs/              # Log files (auto-created)
+
+⚙️ SETUP (5 minutes)
+--------------------
+1. Install dependencies:
+   cd profiles && npm install
+
+2. Setup database:
+   createdb winwinlaw
+   cp .env.example .env
+   # Edit .env with your DB credentials
+   npm run db:init
+
+3. Verify:
+   psql winwinlaw -c "SELECT COUNT(*) FROM practice_areas;"
+
+🚀 USAGE
+--------
+# Test scraping (safe, limited)
+npm run scrape:test
+
+# View statistics
+npm run stats
+
+# View logs
+npm run logs
+
+# Run daily sync manually
+npm run cron:start
+
+📅 DAILY CRON
+-------------
+# Option 1: PM2 (recommended)
+npm install -g pm2
+pm2 start npm --name "scraper" -- run cron:schedule
+pm2 save
+
+# Option 2: System cron
+crontab -e
+# Add: 0 2 * * * cd /path/to/profiles && npm run cron:start
+
+🔧 ADD NEW SCRAPER
+------------------
+1. Create: scrapers/mysource.ts
+2. Extend: BaseScraper class
+3. Implement: getSearchUrl, parseSearchResults, parseProfile
+4. Add to: cron/daily-sync.ts SCRAPER_CONFIGS
+
+📊 DATABASE QUERIES
+-------------------
+# Search lawyers
+SELECT * FROM legal_professionals
+WHERE full_name ILIKE '%smith%'
+AND is_active = true;
+
+# With practice areas
+SELECT * FROM active_professionals_with_practice_areas
+WHERE practice_areas LIKE '%litigation%';
+
+# Recent additions
+SELECT full_name, city, created_at
+FROM legal_professionals
+WHERE created_at > NOW() - INTERVAL '7 days';
+
+# Stats by source
+SELECT source, COUNT(*)
+FROM legal_professionals
+GROUP BY source;
+
+🔍 SEARCH API
+-------------
+# Create endpoint: app/api/search/lawyers/route.ts
+import { searchProfessionals } from '@/profiles/database/operations'
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const query = searchParams.get('q') || ''
+  const results = await searchProfessionals(query)
+  return Response.json({ results })
+}
+
+# Use in landing2:
+const results = await fetch(`/api/search/lawyers?q=${query}`)
+
+⚠️ LEGAL CHECKLIST
+------------------
+Before scraping ANY website:
+☐ Read Terms of Service
+☐ Check for official API
+☐ Get written permission
+☐ Verify robots.txt allows it
+☐ Consult legal counsel
+☐ Set conservative rate limits
+☐ Identify with proper User-Agent
+☐ Implement opt-out mechanism
+☐ Secure the data
+☐ Comply with GDPR/CCPA
+
+✅ LEGAL ALTERNATIVES
+---------------------
+1. State Bar APIs (often free)
+2. Martindale-Hubbell API (paid)
+3. Avvo API (developer-friendly)
+4. Data licensing partnerships
+5. User-submitted profiles
+
+🛠️ TROUBLESHOOTING
+------------------
+# Database issues
+pg_isready
+psql $DATABASE_URL -c "SELECT 1"
+
+# Scraper blocked (403/429)
+- Check robots.txt
+- Increase delays
+- Use official API instead
+
+# View errors
+tail -100 logs/scraper-*.log
+
+📞 KEY FILES
+------------
+README.md        - Overview
+LEGAL_NOTICE.md  - Legal disclaimer (READ THIS!)
+SETUP.md         - Detailed setup guide
+.env.example     - Configuration template
+
+🌐 INTEGRATIONS
+---------------
+# Connect to landing2 search:
+1. Create API endpoint (see above)
+2. Update handleSearch in landing2/page.tsx
+3. Display results
+
+# Connect to database:
+import { searchProfessionals } from '@/profiles/database/operations'
+const results = await searchProfessionals('litigation lawyer')
+
+⚡ QUICK COMMANDS
+----------------
+npm run db:init       # Initialize database
+npm run scrape:test   # Test scraper (safe)
+npm run stats         # View statistics
+npm run logs          # Tail logs
+npm run cron:start    # Run sync job
+
+🎯 PRODUCTION CHECKLIST
+-----------------------
+☐ Legal permission obtained
+☐ Database backups configured
+☐ PM2 or similar process manager
+☐ Monitoring/alerting set up
+☐ Error notifications configured
+☐ Rate limits tested
+☐ Opt-out mechanism in place
+☐ Privacy policy updated
+☐ Security audit completed
+☐ Load testing done
+
+═══════════════════════════════════════════════════════════════
+💡 TIP: Start with legal alternatives (APIs, partnerships)
+    before attempting to scrape!
+
+📧 For questions, check SETUP.md for detailed documentation.
+═══════════════════════════════════════════════════════════════

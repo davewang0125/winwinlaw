@@ -1,0 +1,36 @@
+{
+  "name": "winwinlaw-profiles-scraper",
+  "version": "1.0.0",
+  "description": "Legal professional profiles scraper and database",
+  "main": "index.ts",
+  "scripts": {
+    "db:init": "ts-node -r dotenv/config database/init.ts",
+    "scrape": "ts-node -r dotenv/config scrapers/run.ts",
+    "scrape:test": "ts-node -r dotenv/config scrapers/run.ts --test --limit=5",
+    "cron:start": "ts-node -r dotenv/config cron/daily-sync.ts",
+    "cron:schedule": "node -e \"require('node-cron').schedule('0 2 * * *', () => require('./cron/daily-sync').runScrapers())\"",
+    "stats": "ts-node -r dotenv/config scripts/stats.ts",
+    "logs": "tail -f logs/*.log",
+    "test": "echo 'No tests yet'"
+  },
+  "keywords": [
+    "legal",
+    "lawyer",
+    "scraper",
+    "profiles"
+  ],
+  "author": "WinWin Law",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "pg": "^8.11.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/pg": "^8.10.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  }
+}
