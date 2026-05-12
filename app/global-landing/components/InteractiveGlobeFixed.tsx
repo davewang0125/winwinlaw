@@ -93,57 +93,22 @@ function Globe() {
   // Load Earth textures
   useEffect(() => {
     const loader = new THREE.TextureLoader()
-    loader.crossOrigin = 'anonymous'
 
-    console.log('Starting to load Earth textures...')
+    console.log('Starting to load Earth texture from /textures/earth-blue-marble.jpg')
 
-    // Try local texture first, then fallback to CDN
-    const textureSources = [
-      '/textures/earth-blue-marble.jpg',
-      'https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg',
-      'https://raw.githubusercontent.com/turban/webgl-earth/master/images/2_no_clouds_4k.jpg'
-    ]
-
-    // Try first source (local)
+    // Load from local file
     loader.load(
-      textureSources[0],
+      '/textures/earth-blue-marble.jpg',
       (texture) => {
-        console.log('✅ Earth texture loaded successfully!')
+        console.log('✅ Earth texture loaded successfully!', texture)
+        console.log('Texture size:', texture.image.width, 'x', texture.image.height)
         setEarthTexture(texture)
       },
       (progress) => {
-        console.log('Loading texture...', Math.round((progress.loaded / progress.total) * 100) + '%')
+        console.log('Loading progress:', progress)
       },
       (error) => {
-        console.error('❌ Error loading Earth texture from source 1:', error)
-        console.log('Trying alternative source...')
-
-        // Try second source
-        loader.load(
-          textureSources[1],
-          (texture) => {
-            console.log('✅ Earth texture loaded from alternative source!')
-            setEarthTexture(texture)
-          },
-          undefined,
-          (error2) => {
-            console.error('❌ Error loading from source 2:', error2)
-            console.log('⚠️ Using fallback visualization')
-          }
-        )
-      }
-    )
-
-    // Try to load bump map
-    loader.load(
-      'https://unpkg.com/three-globe@2.31.0/example/img/earth-topology.png',
-      (texture) => {
-        console.log('✅ Bump map loaded!')
-        setBumpMap(texture)
-      },
-      undefined,
-      (error) => {
-        console.log('⚠️ Bump map not loaded, using flat surface')
+        console.error('❌ Error loading Earth texture:', error)
       }
     )
   }, [])
@@ -181,53 +146,34 @@ function Globe() {
             map={earthTexture}
             bumpMap={bumpMap}
             bumpScale={0.05}
-            metalness={0.1}
-            roughness={0.8}
           />
         ) : (
-          // Stylized fallback if texture doesn't load
-          <meshPhongMaterial
-            color="#1a3d5c"
-            emissive="#0a1628"
-            emissiveIntensity={0.3}
-            shininess={30}
-            specular="#4a7ba7"
+          <meshStandardMaterial
+            color="#5099cc"
           />
         )}
       </mesh>
 
-      {/* Globe wireframe overlay - show if no texture to give geographic feel */}
+      {/* Globe wireframe overlay - only show if no texture */}
       {!earthTexture && (
-        <>
-          <mesh>
-            <sphereGeometry args={[globeRadius + 0.01, 36, 18]} />
-            <meshBasicMaterial
-              color="#2a5a7a"
-              wireframe
-              transparent
-              opacity={0.3}
-            />
-          </mesh>
-          {/* Add latitude lines */}
-          <mesh>
-            <sphereGeometry args={[globeRadius + 0.015, 4, 36]} />
-            <meshBasicMaterial
-              color="#3a6a8a"
-              wireframe
-              transparent
-              opacity={0.4}
-            />
-          </mesh>
-        </>
+        <mesh>
+          <sphereGeometry args={[globeRadius + 0.01, 32, 32]} />
+          <meshBasicMaterial
+            color="#4a7ba7"
+            wireframe
+            transparent
+            opacity={0.2}
+          />
+        </mesh>
       )}
 
       {/* Atmosphere glow */}
       <mesh>
-        <sphereGeometry args={[globeRadius + 0.15, 24, 24]} />
+        <sphereGeometry args={[globeRadius + 0.1, 32, 32]} />
         <meshBasicMaterial
-          color="#00aaff"
+          color="#aaddff"
           transparent
-          opacity={earthTexture ? 0.08 : 0.1}
+          opacity={0.1}
           side={THREE.BackSide}
         />
       </mesh>
@@ -321,14 +267,13 @@ export default function InteractiveGlobeFixed() {
         style={{ background: 'transparent' }}
         gl={{ alpha: true, antialias: true }}
       >
-        {/* Lighting - optimized for Earth texture */}
-        <ambientLight intensity={0.3} />
-        <directionalLight position={[5, 3, 5]} intensity={1.5} color="#ffffff" />
-        <pointLight position={[-10, -5, -10]} intensity={0.3} color="#0088ff" />
+        {/* Lighting - natural and balanced */}
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[5, 3, 5]} intensity={1.0} color="#ffffff" />
         <hemisphereLight
           color="#ffffff"
-          groundColor="#0a1628"
-          intensity={0.4}
+          groundColor="#666666"
+          intensity={0.5}
         />
 
         {/* Globe */}

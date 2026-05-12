@@ -34,7 +34,7 @@ function CountryMarker({ country, onHover, onClick, isHovered, globeRadius }: Co
       const scale = isHovered ? 1.5 : 1
       markerRef.current.scale.lerp(new THREE.Vector3(scale, scale, scale), 0.1)
 
-      if (isHovered) {
+      if (isHovered && markerRef.current.material instanceof THREE.MeshStandardMaterial) {
         markerRef.current.material.emissiveIntensity =
           0.5 + Math.sin(state.clock.elapsedTime * 3) * 0.3
       }
