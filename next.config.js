@@ -1,7 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // No special output mode needed for Vercel
-  // Vercel handles Next.js deployments automatically
+  // Redirect home page to winwinlanding
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/winwinlanding/index.html',
+        permanent: false, // Use 307 temporary redirect
+      },
+    ]
+  },
+
+  // Disable automatic trailing slash redirect
+  trailingSlash: false,
 }
 
 module.exports = nextConfig
