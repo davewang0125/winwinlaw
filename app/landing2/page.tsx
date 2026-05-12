@@ -1,7 +1,3 @@
-'use client'
-
-import { useState } from 'react'
-import { Search } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import './styles.css'
 
@@ -10,15 +6,11 @@ const HalfGlobe = dynamic(() => import('./components/HalfGlobe'), {
   loading: () => <div className="globe-loading">Loading globe...</div>
 })
 
+const SearchBox = dynamic(() => import('./components/SearchBox'), {
+  ssr: false,
+})
+
 export default function Landing2() {
-  const [searchQuery, setSearchQuery] = useState('')
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log('Searching for:', searchQuery)
-    // TODO: Implement search functionality
-  }
-
   return (
     <div className="landing2-page">
       {/* Hero Section with Half Globe */}
@@ -34,21 +26,7 @@ export default function Landing2() {
             </h2>
 
             {/* Search Box */}
-            <form className="search-form" onSubmit={handleSearch}>
-              <div className="search-box">
-                <Search className="search-icon" />
-                <input
-                  type="text"
-                  placeholder="Search lawyers, legal issues..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="search-input"
-                />
-                <button type="submit" className="search-button">
-                  Search
-                </button>
-              </div>
-            </form>
+            <SearchBox />
 
             <p className="hero-description">
               Connect with legal professionals worldwide for litigation, mediation, and arbitration services.
@@ -129,18 +107,7 @@ export default function Landing2() {
           <p className="cta-description">
             Find the right legal professional for your case today
           </p>
-          <form className="cta-search-form" onSubmit={handleSearch}>
-            <input
-              type="text"
-              placeholder="Search lawyers, legal issues..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="cta-search-input"
-            />
-            <button type="submit" className="cta-search-button">
-              Get Started
-            </button>
-          </form>
+          <SearchBox />
         </div>
       </section>
 
