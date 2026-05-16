@@ -214,29 +214,122 @@ body {
 .image-placeholder {
     width: 100%;
     height: 500px;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    background: transparent;
     border-radius: 16px;
-    box-shadow: var(--shadow-lg);
     position: relative;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
 }
 
-.image-placeholder::before {
+/* Globe Container */
+.globe {
+    width: 400px;
+    height: 400px;
+    position: relative;
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Main Globe Sphere */
+.globe::before {
     content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 30% 30%, rgba(100, 180, 255, 0.8), transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(20, 100, 180, 0.6), transparent 40%),
+        linear-gradient(135deg,
+            #1a5490 0%,
+            #2670b8 25%,
+            #1a5490 50%,
+            #0f3a66 75%,
+            #1a5490 100%
+        );
+    border-radius: 50%;
+    box-shadow:
+        inset -30px -30px 60px rgba(0, 0, 0, 0.4),
+        inset 20px 20px 40px rgba(255, 255, 255, 0.1),
+        0 30px 80px rgba(26, 84, 144, 0.4),
+        0 15px 40px rgba(26, 84, 144, 0.3);
+    animation: rotate 20s linear infinite;
+}
+
+/* Globe Highlight/Shine */
+.globe::after {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 15%;
+    width: 40%;
+    height: 40%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+    border-radius: 50%;
+    filter: blur(20px);
+}
+
+/* Continents/Texture Pattern */
+.globe-texture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-image:
+        radial-gradient(circle at 25% 35%, rgba(255, 255, 255, 0.15) 2%, transparent 3%),
+        radial-gradient(circle at 30% 38%, rgba(255, 255, 255, 0.12) 1.5%, transparent 2%),
+        radial-gradient(circle at 35% 40%, rgba(255, 255, 255, 0.1) 2.5%, transparent 3%),
+        radial-gradient(circle at 60% 50%, rgba(255, 255, 255, 0.12) 3%, transparent 3.5%),
+        radial-gradient(circle at 65% 55%, rgba(255, 255, 255, 0.15) 2%, transparent 2.5%),
+        radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.1) 2%, transparent 2.5%),
+        radial-gradient(circle at 40% 65%, rgba(255, 255, 255, 0.13) 2.5%, transparent 3%),
+        radial-gradient(circle at 45% 70%, rgba(255, 255, 255, 0.11) 1.5%, transparent 2%),
+        radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.14) 3%, transparent 3.5%);
+    background-size: 100% 100%;
+    opacity: 0.6;
+    animation: rotate 20s linear infinite;
+}
+
+/* Orbit Rings */
+.orbit-ring {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%) rotateX(75deg);
+    width: 500px;
+    height: 500px;
+    border: 2px solid rgba(26, 84, 144, 0.2);
     border-radius: 50%;
-    animation: pulse 3s ease-in-out infinite;
+    animation: orbitRotate 15s linear infinite;
 }
 
-@keyframes pulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.3; }
+.orbit-ring:nth-child(2) {
+    width: 550px;
+    height: 550px;
+    border-color: rgba(38, 112, 184, 0.15);
+    animation-duration: 18s;
+    animation-direction: reverse;
+}
+
+/* Floating Animation */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes orbitRotate {
+    from { transform: translate(-50%, -50%) rotateX(75deg) rotateZ(0deg); }
+    to { transform: translate(-50%, -50%) rotateX(75deg) rotateZ(360deg); }
+}
 }
 
 /* Trust Bar */
